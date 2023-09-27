@@ -32,8 +32,8 @@ def pinch_mouse_move(current_sign, last_sign, landmarks, fake_mouse: FakeMouse, 
             last_mouse_position = (current_mouse.x, current_mouse.y)
         if last_pinch_position == (0,0) or (last_sign != 'Pinch'):
             last_pinch_position = (thumb_tip_x, thumb_tip_y)
-        delta_x = (thumb_tip_x - last_mouse_position[0])# * multiplier
-        delta_y = (thumb_tip_y - last_mouse_position[1])# * multiplier
+        delta_x = (thumb_tip_x - last_pinch_position[0]) * multiplier
+        delta_y = (thumb_tip_y - last_pinch_position[1]) * multiplier
         fake_mouse.move_delta(delta_x, delta_y)
         current_mouse = fake_mouse.get_mouse_coords()
         last_mouse_position = (current_mouse.x, current_mouse.y)
@@ -52,7 +52,7 @@ def main():
             break
 
         if current_sign == 'Pinch':
-            pinch_mouse_move(current_sign, last_sign, landmarks, fake_mouse, 500)
+            pinch_mouse_move(current_sign, last_sign, landmarks, fake_mouse, 1000)
         
         last_sign = current_sign
 
@@ -62,7 +62,7 @@ def main():
     # Move mouse or act accordingly
     # Repeat
 
-    fake_mouse.move_to(100,100)
+    fake_mouse.move_to(1920/2, 1080/2)
 
 if __name__ == '__main__':
     main()
