@@ -33,7 +33,7 @@ def save_model(model, model_path = WORKING_DIR + '\\model.p'):
     pickle.dump({'model': model}, f)
     f.close()
 
-def main():
+def train_random_forest_classifier():
     landmark_data, landmark_labels = load_data()
     x_train, x_test, y_train, y_test = create_test_train_split(landmark_data, landmark_labels)
     model = train_classifier(x_train, y_train)
@@ -41,4 +41,4 @@ def main():
     save_model(model)
 
 if __name__ == '__main__':
-    main()
+    train_random_forest_classifier()

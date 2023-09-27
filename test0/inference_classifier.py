@@ -52,7 +52,10 @@ def run_classifier(model:RandomForestClassifier, labels_dict, hands: mp_hands.Ha
             y2 = int(max(y_) * H) - 10
 
             prediction = model.predict(np.array([data_aux]))
-            print(prediction)
+            certainty = model.predict_proba(np.array([data_aux]))
+            # Print percent certainty by turning certainty into a single percentage from the array
+            # print(certainty[0][int(prediction[0])] * 100)
+            # print(prediction)
 
             predicted_character = labels_dict[int(prediction[0])]
 
@@ -61,8 +64,12 @@ def run_classifier(model:RandomForestClassifier, labels_dict, hands: mp_hands.Ha
         cv2.imshow('frame', frame)
         k = cv2.waitKey(1)
         if k == ESC:
-            exit()
+            end_program()
+            break
 
+def end_program():
+    cv2.destroyAllWindows()
+    # exit()
 
 def draw_landmarks(frame, hand_landmarks):
     mp_drawing.draw_landmarks(
@@ -77,12 +84,12 @@ def draw_bounding_box(frame, predicted_character, x1, y1, x2, y2):
     cv2.putText(frame, predicted_character, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36, 255, 12), 2)
 
 
-def main():
+def inference_classifier():
     hands = mp_hands.Hands(static_image_mode=True, min_detection_confidence=0.3)
     model = load_model(WORKING_DIR + '/model.p')
-    labels_dict = {0: 'A', 1: 'B', 2: 'L', 3: 'O', 4: 'P'}
+    labels_dict = {0: 'QC', 1: 'L', 2: 'Pinch', 3: 'Open', 4: 'Point'}
     cap = cv2.VideoCapture(0)
     run_classifier(model, labels_dict, hands, cap)
 
 if __name__ == '__main__':
-    main()
+    inference_classifier()
