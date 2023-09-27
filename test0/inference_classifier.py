@@ -13,7 +13,7 @@ def load_model(model_path):
     model : RandomForestClassifier = model_dict['model']
     return model
 
-def run_classifier(model:RandomForestClassifier, labels_dict, hands: mp_hands.Hands, cap: cv2.VideoCapture):
+def run_classifier(model:RandomForestClassifier, labels_dict, hands: mp_hands.Hands, cap: cv2.VideoCapture, show_video=True):
     while True:
         data_aux = []
         x_ = []
@@ -59,13 +59,64 @@ def run_classifier(model:RandomForestClassifier, labels_dict, hands: mp_hands.Ha
 
             predicted_character = labels_dict[int(prediction[0])]
 
-            draw_bounding_box(frame, predicted_character, x1, y1, x2, y2)
+            if show_video:
+                draw_bounding_box(frame, predicted_character, x1, y1, x2, y2)
         
-        cv2.imshow('frame', frame)
+        if show_video:
+            cv2.imshow('frame', frame)
         k = cv2.waitKey(1)
         if k == ESC:
             end_program()
             break
+
+def run_inference_classifier_novideo(model:RandomForestClassifier, 
+                                     labels_dict, hands: mp_hands.Hands = mp_hands.Hands(static_image_mode=True, min_detection_confidence=0.3), 
+                                     cap: cv2.VideoCapture = cv2.VideoCapture(0)):
+    data_aux = []
+    x_ = []
+    y_ = []
+
+    ret, frame = cap.read()
+    frame = cv2.flip(frame, 1)
+
+    H, W, _ = frame.shape
+    frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    results = hands.process(frame_rgb)
+
+    if results.multi_hand_landmarks:
+        if(len(results.multi_hand_landmarks) > 1):
+            print("More than one hand detected")
+            return
+        for hand_landmarks in results.multi_hand_landmarks:
+            draw_landmarks(frame, hand_landmarks)
+            for i in range(len(hand_landmarks.landmark)):
+                x = hand_landmarks.landmark[i].x
+                y = hand_landmarks.landmark[i].y
+
+                x_.append(x)
+                y_.append(y)
+
+            for i in range(len(hand_landmarks.landmark)):
+                x = hand_landmarks.landmark[i].x
+                y = hand_landmarks.landmark[i].y
+                data_aux.append(x - min(x_))
+                data_aux.append(y - min(y_))
+
+        x1 = int(min(x_) * W) - 10
+        y1 = int(min(y_) * H) - 10
+        
+        x2 = int(max(x_) * W) - 10
+        y2 = int(max(y_) * H) - 10
+
+        prediction = model.predict(np.array([data_aux]))
+        certainty = model.predict_proba(np.array([data_aux]))
+        # Print percent certainty by turning certainty into a single percentage from the array
+        # print(certainty[0][int(prediction[0])] * 100)
+        # print(prediction)
+
+        predicted_label = labels_dict[int(prediction[0])]
+        return predicted_label
+
 
 def end_program():
     cv2.destroyAllWindows()
@@ -83,13 +134,12 @@ def draw_bounding_box(frame, predicted_character, x1, y1, x2, y2):
     cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 0), 2)
     cv2.putText(frame, predicted_character, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36, 255, 12), 2)
 
-
-def inference_classifier():
+def inference_classifier(show_video=True):
     hands = mp_hands.Hands(static_image_mode=True, min_detection_confidence=0.3)
     model = load_model(WORKING_DIR + '/model.p')
     labels_dict = {0: 'QC', 1: 'L', 2: 'Pinch', 3: 'Open', 4: 'Point'}
     cap = cv2.VideoCapture(0)
-    run_classifier(model, labels_dict, hands, cap)
+    run_classifier(model, labels_dict, hands, cap, show_video)
 
 if __name__ == '__main__':
     inference_classifier()
