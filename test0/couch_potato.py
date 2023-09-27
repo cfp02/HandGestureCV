@@ -21,23 +21,31 @@ def open_detection(current_sign, buffer_len = 5):
 
 def pinch_mouse_move(current_sign, last_sign, landmarks, fake_mouse: FakeMouse, multiplier):
     global last_mouse_position, last_pinch_position
-    # Use THUMB_TIP landmark, at index 4
+    # Use thumb, index finger, middle finger landmarks, at indices 4, 8, 12
     # moves mouse around based on thumb position, uses last mouse and thumb position to calculate delta
     if current_sign == 'Pinch':
         thumb_tip = landmarks[4]
+        index_tip = landmarks[8]
+        middle_tip = landmarks[12]
         thumb_tip_x = thumb_tip.x
         thumb_tip_y = thumb_tip.y
+        index_tip_x = index_tip.x
+        index_tip_y = index_tip.y
+        middle_tip_x = middle_tip.x
+        middle_tip_y = middle_tip.y
+        average_x = (thumb_tip_x + index_tip_x + middle_tip_x) / 3
+        average_y = (thumb_tip_y + index_tip_y + middle_tip_y) / 3
         if last_mouse_position == (0,0) or (last_sign != 'Pinch'):
             current_mouse = fake_mouse.get_mouse_coords()
             last_mouse_position = (current_mouse.x, current_mouse.y)
         if last_pinch_position == (0,0) or (last_sign != 'Pinch'):
-            last_pinch_position = (thumb_tip_x, thumb_tip_y)
-        delta_x = (thumb_tip_x - last_pinch_position[0]) * multiplier
-        delta_y = (thumb_tip_y - last_pinch_position[1]) * multiplier
+            last_pinch_position = (average_x, average_y)
+        delta_x = (average_x - last_pinch_position[0]) * multiplier
+        delta_y = (average_y - last_pinch_position[1]) * multiplier
         fake_mouse.move_delta(delta_x, delta_y)
         current_mouse = fake_mouse.get_mouse_coords()
         last_mouse_position = (current_mouse.x, current_mouse.y)
-        last_pinch_position = (thumb_tip_x, thumb_tip_y)
+        last_pinch_position = (average_x, average_y)
         
 
 def main():
