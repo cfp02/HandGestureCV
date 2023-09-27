@@ -4,6 +4,9 @@ class FakeMouse:
     def __init__(self):
         pass
 
+    def get_mouse_coords(self):
+        return pyautogui.position()
+
     def move_to(self, x, y):
         pyautogui.moveTo(x, y)
         print("Mouse move: ", x, y)

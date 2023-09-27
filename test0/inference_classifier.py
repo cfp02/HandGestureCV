@@ -75,6 +75,8 @@ def run_inference_classifier_novideo(model:RandomForestClassifier,
     data_aux = []
     x_ = []
     y_ = []
+    this_hand_landmarks = None
+    predicted_label = None
 
     ret, frame = cap.read()
     frame = cv2.flip(frame, 1)
@@ -86,9 +88,9 @@ def run_inference_classifier_novideo(model:RandomForestClassifier,
     if results.multi_hand_landmarks:
         if(len(results.multi_hand_landmarks) > 1):
             print("More than one hand detected")
-            return
+            return None, None
         for hand_landmarks in results.multi_hand_landmarks:
-            draw_landmarks(frame, hand_landmarks)
+            this_hand_landmarks = hand_landmarks.landmark
             for i in range(len(hand_landmarks.landmark)):
                 x = hand_landmarks.landmark[i].x
                 y = hand_landmarks.landmark[i].y
@@ -114,8 +116,10 @@ def run_inference_classifier_novideo(model:RandomForestClassifier,
         # print(certainty[0][int(prediction[0])] * 100)
         # print(prediction)
 
-        predicted_label = labels_dict[int(prediction[0])]
-        return predicted_label
+        predicted_label:str = labels_dict[int(prediction[0])]
+
+    return predicted_label, this_hand_landmarks
+        
 
 
 def end_program():
