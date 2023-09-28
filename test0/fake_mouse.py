@@ -15,8 +15,9 @@ class FakeMouse:
         pyautogui.move(x, y)
         print("Mouse move delta: ", x, y)
 
-    def click(self, x, y):
+    def left_click(self, x, y):
         print("Mouse click: ", x, y)
+        pyautogui.click(x, y)
 
     def press(self, button):
         print("Mouse press: ", button)

@@ -5,7 +5,7 @@ import cv2
 import matplotlib.pyplot as plt
 from mediapipe.python.solutions import hands as mp_hands, drawing_utils as mp_drawing, drawing_styles as mp_drawing_styles
 
-from header import DATA_DIR, WORKING_DIR, number_of_classes, dataset_size, SPACEBAR, ESC
+from header import DATA_DIR, WORKING_DIR, dataset_size, SPACEBAR, ESC
 
 # mp.solutions imports other packages, so links to the hands class do not work with VS code
 # mp_hands = hands

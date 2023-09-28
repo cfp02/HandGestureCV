@@ -6,7 +6,7 @@ from sklearn.ensemble import RandomForestClassifier
 import pickle
 from mediapipe.python.solutions import hands as mp_hands, drawing_utils as mp_drawing, drawing_styles as mp_drawing_styles
 
-from header import DATA_DIR, WORKING_DIR, number_of_classes, dataset_size, SPACEBAR, ESC
+from header import DATA_DIR, WORKING_DIR, dataset_size, SPACEBAR, ESC
 
 def load_model(model_path):
     model_dict = pickle.load(open(model_path, 'rb'))
@@ -53,11 +53,16 @@ def run_classifier(model:RandomForestClassifier, labels_dict, hands: mp_hands.Ha
 
             prediction = model.predict(np.array([data_aux]))
             certainty = model.predict_proba(np.array([data_aux]))
+            print(certainty)
             # Print percent certainty by turning certainty into a single percentage from the array
             # print(certainty[0][int(prediction[0])] * 100)
             # print(prediction)
 
-            predicted_character = labels_dict[int(prediction[0])]
+            try:
+                predicted_character = labels_dict[int(prediction[0])]
+            except ValueError as e:
+                predicted_character = prediction[0]
+            
 
             if show_video:
                 draw_bounding_box(frame, predicted_character, x1, y1, x2, y2)

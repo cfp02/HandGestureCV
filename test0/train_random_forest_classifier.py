@@ -5,7 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
-from header import DATA_DIR, WORKING_DIR, number_of_classes, dataset_size, SPACEBAR, ESC
+from header import DATA_DIR, WORKING_DIR, dataset_size, SPACEBAR, ESC
 
 
 def load_data(data_path = WORKING_DIR + '\\landmark_dataset.pickle'):
