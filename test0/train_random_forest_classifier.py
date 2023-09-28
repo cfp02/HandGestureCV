@@ -23,7 +23,7 @@ def train_classifier(x_train, y_train):
     model.fit(x_train, y_train)
     return model
 
-def test_classifier(model, x_test, y_test):
+def test_classifier(model: RandomForestClassifier, x_test, y_test):
     y_predict = model.predict(x_test)
     score = accuracy_score(y_predict, y_test)
     print('{}% of samples were classified correctly !'.format(score * 100))
