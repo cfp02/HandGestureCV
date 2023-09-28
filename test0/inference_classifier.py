@@ -121,7 +121,10 @@ def run_inference_classifier_novideo(model:RandomForestClassifier,
         # print(certainty[0][int(prediction[0])] * 100)
         # print(prediction)
 
-        predicted_label:str = labels_dict[int(prediction[0])]
+        try:
+            predicted_label = labels_dict[int(prediction[0])]
+        except ValueError as e:
+            predicted_label = prediction[0]
 
     return predicted_label, this_hand_landmarks
         
