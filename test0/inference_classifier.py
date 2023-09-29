@@ -53,7 +53,7 @@ def run_classifier(model:RandomForestClassifier, labels_dict, hands: mp_hands.Ha
 
             prediction = model.predict(np.array([data_aux]))
             certainty = model.predict_proba(np.array([data_aux]))
-            print(certainty)
+            print("Certainty: " + str(certainty))
             # Print percent certainty by turning certainty into a single percentage from the array
             # print(certainty[0][int(prediction[0])] * 100)
             # print(prediction)
