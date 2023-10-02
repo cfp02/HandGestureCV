@@ -8,7 +8,7 @@ from sklearn.metrics import accuracy_score
 from header import DATA_DIR, WORKING_DIR, dataset_size, SPACEBAR, ESC
 
 
-def load_data(data_path = WORKING_DIR + '\\landmark_dataset.pickle'):
+def load_data(data_path = WORKING_DIR + '\\landmark_dataset_tflite.pickle'):
     data_dict = pickle.load(open(data_path, 'rb'))
     landmark_data = np.array(data_dict['data'])
     landmark_labels = np.array(data_dict['labels'])
@@ -28,7 +28,7 @@ def test_classifier(model: RandomForestClassifier, x_test, y_test):
     score = accuracy_score(y_predict, y_test)
     print('{}% of samples were classified correctly !'.format(score * 100))
 
-def save_model(model, model_path = WORKING_DIR + '\\model.p'):
+def save_model(model, model_path = WORKING_DIR + '\\model_tflite.p'):
     f = open(model_path, 'wb')
     pickle.dump({'model': model}, f)
     f.close()
