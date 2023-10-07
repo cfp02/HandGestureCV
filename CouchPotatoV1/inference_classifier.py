@@ -1,3 +1,5 @@
+# Runs random forest classification, taking hand landmarks as input and outputting a prediction
+
 
 import cv2
 import mediapipe as mp
