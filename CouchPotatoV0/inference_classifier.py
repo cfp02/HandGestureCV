@@ -148,7 +148,7 @@ def draw_bounding_box(frame, predicted_character, x1, y1, x2, y2):
 
 def inference_classifier(show_video=True):
     hands = mp_hands.Hands(static_image_mode=True, min_detection_confidence=0.3)
-    model = load_model(WORKING_DIR + '/model.p')
+    model = load_model(WORKING_DIR + '/model_tflite.p')
     labels_dict = {0: 'QC', 1: 'L', 2: 'Pinch', 3: 'Open', 4: 'Point'}
     cap = cv2.VideoCapture(0)
     run_classifier(model, labels_dict, hands, cap, show_video)
