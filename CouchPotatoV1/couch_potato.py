@@ -122,7 +122,7 @@ def run_couch_potato_active(model, fake_mouse: FakeMouse):
 
 def main():
     fake_mouse = FakeMouse()
-    model = load_model(WORKING_DIR + '/model.p')
+    model = load_model(WORKING_DIR + '/model_tflite.p')
     run_couch_potato_active(model, fake_mouse)
     
     #fix starting coords, yeets to the corner sometimes, might have to set init to current mouse position
